@@ -1,15 +1,16 @@
-<p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Anthropic_logo.svg/1200px-Anthropic_logo.svg.png" alt="Anthropic Logo" width="120"/>
-</p>
-
-<h1 align="center">Claude Agentic Patterns</h1>
+<h1 align="center">Agentic Patterns</h1>
 
 <p align="center">
-  <strong>Official design patterns for building agentic AI systems with Claude</strong>
+  <strong>Design patterns for building agentic AI systems</strong>
 </p>
 
 <p align="center">
-  <em>Curated collection of validated orchestration patterns from Anthropic's documentation and engineering practices</em>
+  <em>Curated collection of validated orchestration patterns from official documentation and research</em>
+</p>
+
+<p align="center">
+  <sub>⚠️ <strong>Disclaimer:</strong> This is an independent community resource. Not affiliated with Anthropic.</sub><br/>
+  <sub>Patterns are based on official documentation but maintained independently.</sub>
 </p>
 
 <p align="center">
@@ -21,9 +22,8 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Claude-4.5-blueviolet?style=flat-square" alt="Claude 4.5"/>
-  <img src="https://img.shields.io/badge/Source-Anthropic_Docs-green?style=flat-square" alt="Source: Anthropic Docs"/>
   <img src="https://img.shields.io/badge/Patterns-7-blue?style=flat-square" alt="7 Patterns"/>
+  <img src="https://img.shields.io/badge/Source-Official_Docs-green?style=flat-square" alt="Source: Official Docs"/>
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License"/>
   <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square" alt="PRs Welcome"/>
 </p>
@@ -380,11 +380,16 @@ MIT License - See [LICENSE](LICENSE) for details.
 ---
 
 <p align="center">
-  <sub>Built with Claude Code | Sourced from Anthropic Documentation | November 2025</sub>
+  <sub>Built with Claude Code | Based on official documentation | November 2025</sub><br/>
+  <sub>Independent community resource - not affiliated with Anthropic</sub>
 </p>
 
 <p align="center">
-  <a href="https://github.com/anthropics">
-    <img src="https://img.shields.io/badge/Anthropic-Official_Sources-black?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0wIDE4Yy00LjQxIDAtOC0zLjU5LTgtOHMzLjU5LTggOC04IDggMy41OSA4IDgtMy41OSA4LTggOHoiLz48L3N2Zz4=" alt="Anthropic"/>
+  <a href="https://github.com/SuperNovae-studio">
+    <img src="https://avatars.githubusercontent.com/u/33066282?s=200&v=4" alt="SuperNovae Studio" width="50"/>
   </a>
+</p>
+
+<p align="center">
+  <sub>Made by <a href="https://github.com/SuperNovae-studio">SuperNovae Studio</a></sub>
 </p>
