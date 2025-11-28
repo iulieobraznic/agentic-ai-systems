@@ -1,43 +1,43 @@
 <div align="center">
 
-[🏠 Home](README.md) • [📖 Overview](00-OVERVIEW.md) • **05 Selection Guide**
+[🏠 Home](README.md) • [📖 Overview](00-OVERVIEW.md) • **06 Selection Guide**
 
-━━━━━━━━━━━●━━━━━━━━━━━━━━━━━━━ `5/8`
+━━━━━━━━━━━●━━━━━━━━━━━━━━━━━━━━ `6/8`
 
-[← 04 Use Cases](04-USE-CASES.md) • [06 Glossary →](06-MAPPING-GLOSSARY.md)
+[← 05 Use Cases](05-USE-CASES.md) • [07 Glossary →](07-MAPPING-GLOSSARY.md)
 
 </div>
 
 ---
 
-# Pattern Selection Guide
+# System Selection Guide
 
-> Decision trees and criteria for choosing the right agentic pattern
+> Decision trees and criteria for choosing the right workflow or agent
 
 ## 📑 Table of Contents
 
 | # | Section | Description |
 |---|---------|-------------|
-| 1 | [Use Cases → Pattern](#real-world-use-cases--pattern) | Quick reference |
+| 1 | [Use Cases → System](#real-world-use-cases--system) | Quick reference |
 | 2 | [By Task Complexity](#by-task-complexity) | Complexity-based |
 | 3 | [Decision Tree](#master-decision-tree) | Interactive flow |
-| 4 | [By Requirement](#pattern-by-requirement) | Feature matrix |
-| 5 | [Combination Rules](#combining-patterns) | Pattern combos |
+| 4 | [By Requirement](#system-by-requirement) | Feature matrix |
+| 5 | [Combination Rules](#combining-systems) | System combos |
 
 ---
 
-## Real-World Use Cases → Pattern
+## Real-World Use Cases → System
 
-| Use Case | Primary Pattern | Secondary | Details |
+| Use Case | Primary System | Secondary | Details |
 |----------|-----------------|-----------|---------|
-| Multi-Agent Research | 🦑 Subagent Orchestration | 🚂 Parallel | [→ Use Cases](04-USE-CASES.md#use-case-1-multi-agent-research-system) |
-| Code Review Pipeline | 🚂 Parallel Tool Calling | 🦑 Subagent | [→ Use Cases](04-USE-CASES.md#use-case-2-production-code-review) |
-| Multi-Locale Generation | 🧬 Master-Clone | 🧙 Wizard | [→ Use Cases](04-USE-CASES.md#use-case-3-multi-locale-content-generation) |
-| Personal Assistant | 📚 Progressive Skills | 🚦 Routing | [→ Use Cases](04-USE-CASES.md#use-case-4-intelligent-personal-assistant) |
-| Customer Support | 🚦 Routing | 🦑 Subagent | [→ Use Cases](04-USE-CASES.md#use-case-5-customer-support-automation) |
-| Data Migration | 🧙 Wizard Workflows | 🖥️ Multi-Window | [→ Use Cases](04-USE-CASES.md#use-case-6-data-pipeline-migration) |
+| Multi-Agent Research | 🦑 Orchestrator-Workers | 🚂 Parallel | [→ Use Cases](05-USE-CASES.md#use-case-1-multi-agent-research-system) |
+| Code Review Pipeline | 🚂 Parallel Tool Calling | 🦑 Subagent | [→ Use Cases](05-USE-CASES.md#use-case-2-production-code-review) |
+| Multi-Locale Generation | 🧬 Master-Clone | 🧙 Wizard | [→ Use Cases](05-USE-CASES.md#use-case-3-multi-locale-content-generation) |
+| Personal Assistant | 📚 Progressive Skills | 🚦 Routing | [→ Use Cases](05-USE-CASES.md#use-case-4-intelligent-personal-assistant) |
+| Customer Support | 🚦 Routing | 🦑 Subagent | [→ Use Cases](05-USE-CASES.md#use-case-5-customer-support-automation) |
+| Data Migration | 🧙 Wizard Workflows | 🖥️ Multi-Window | [→ Use Cases](05-USE-CASES.md#use-case-6-data-pipeline-migration) |
 
-> See [04-USE-CASES.md](04-USE-CASES.md) for detailed architectures and implementation examples.
+> See [05-USE-CASES.md](05-USE-CASES.md) for detailed architectures and implementation examples.
 
 ---
 
@@ -48,7 +48,7 @@
 ```
 Simple Task (1 step)          → Direct execution
 Medium Task (2-4 steps)       → Prompt Chaining or 📚 Progressive Skills
-Complex Task (5+ steps)       → 🦑 Subagent Orchestration
+Complex Task (5+ steps)       → 🦑 Orchestrator-Workers
 Very Complex (multiple hours) → 🧙 Wizard Workflows + 🖥️ Multi-Window Context
 ```
 
@@ -58,14 +58,14 @@ Very Complex (multiple hours) → 🧙 Wizard Workflows + 🖥️ Multi-Window C
 Sequential required    → Prompt Chaining
 Independent steps      → 🚂 Parallel Tool Calling
 Independent domains    → 🧬 Master-Clone
-Mixed                  → 🦑 Subagent Orchestration
+Mixed                  → 🦑 Orchestrator-Workers
 ```
 
 ### By User Involvement
 
 ```
 Fully autonomous       → Autonomous Agents
-Occasional feedback    → 🦑 Subagent Orchestration
+Occasional feedback    → 🦑 Orchestrator-Workers
 Critical checkpoints   → 🧙 Wizard Workflows
 Full control           → 🎛️ Programmatic Orchestration
 ```
@@ -95,7 +95,7 @@ flowchart TD
     Q4 -->|Yes| WIZARD["🧙 Wizard Workflows"]:::pattern
     Q4 -->|No| Q5{Needs specialization?}:::decision
 
-    Q5 -->|Yes| SUBAGENT["🦑 Subagent Orchestration"]:::pattern
+    Q5 -->|Yes| SUBAGENT["🦑 Orchestrator-Workers"]:::pattern
     Q5 -->|No| Q6{Predefined methodology?}:::decision
 
     Q6 -->|Yes| SKILLS["📚 Progressive Skills"]:::pattern
@@ -127,7 +127,7 @@ flowchart LR
     end
 
     subgraph Large["❌ Large PR (10+ files)"]
-        L1["🦑 Subagent Orchestration"]
+        L1["🦑 Orchestrator-Workers"]
         L2["🐦 Security Subagent"]:::subagent
         L3["🐦 Performance Subagent"]:::subagent
         L4["🐦 Style Subagent"]:::subagent
@@ -142,7 +142,7 @@ flowchart LR
 **Selection:**
 - 1-3 files → **Direct execution**
 - 4-10 files → **🚂 Parallel Tool Calling** (read all, review)
-- 10+ files → **🦑 Subagent Orchestration** (specialized reviewers)
+- 10+ files → **🦑 Orchestrator-Workers** (specialized reviewers)
 
 ---
 
@@ -163,7 +163,7 @@ flowchart TD
     Q2 -->|No| CHAIN["Prompt Chaining"]
 
     Q3 -->|Yes| PARALLEL["🚂 Parallel Tool Calling"]
-    Q3 -->|No| SUBAGENT["🦑 Subagent Orchestration"]
+    Q3 -->|No| SUBAGENT["🦑 Orchestrator-Workers"]
 
     TDD --> Q2
 ```
@@ -171,7 +171,7 @@ flowchart TD
 **Selection:**
 - Enforced methodology → **📚 Progressive Skills** first
 - Multi-component, independent → **🚂 Parallel Tool Calling**
-- Multi-component, dependent → **🦑 Subagent Orchestration**
+- Multi-component, dependent → **🦑 Orchestrator-Workers**
 - Linear steps → **Prompt Chaining**
 
 ---
@@ -233,7 +233,7 @@ flowchart TB
 
 **Selection:**
 - 🙋‍♀️ User confirmation → **🧙 Wizard Workflows**
-- Primary then variants → **🦑 Subagent Orchestration**
+- Primary then variants → **🦑 Orchestrator-Workers**
 - Variants parallel → **🧬 Master-Clone**
 - Long workflow → **🖥️ Multi-Window Context**
 
@@ -243,10 +243,10 @@ flowchart TB
 
 ### Can Be Combined
 
-| Primary Pattern | Compatible With |
+| Primary System | Compatible With |
 |-----------------|-----------------|
 | 🧙 Wizard Workflows | All patterns |
-| 🦑 Subagent Orchestration | 🚂 Parallel, 🧬 Master-Clone, 🖥️ Multi-Window |
+| 🦑 Orchestrator-Workers | 🚂 Parallel, 🧬 Master-Clone, 🖥️ Multi-Window |
 | 📚 Progressive Skills | 🦑 Subagent, 🚂 Parallel |
 | 🚂 Parallel Tool Calling | 🦑 Subagent, 🖥️ Multi-Window |
 | 🧬 Master-Clone | 🦑 Subagent, 🖥️ Multi-Window |
@@ -283,7 +283,7 @@ flowchart LR
 ### 1. ❌ Over-Engineering Simple Tasks
 
 ```
-❌ WRONG: Use 🦑 Subagent Orchestration for "fix typo"
+❌ WRONG: Use 🦑 Orchestrator-Workers for "fix typo"
 ✅ RIGHT: Direct execution
 
 Rule: If it takes 1 step, don't add patterns
@@ -430,7 +430,7 @@ flowchart TD
     COMPLEX -->|No| DIRECT["Direct Execution"]:::execute
     COMPLEX -->|Yes| SPECIAL{Specialized<br/>domains?}:::decision
 
-    SPECIAL -->|Yes| SUBAGENT["🦑 Subagent Orchestration"]
+    SPECIAL -->|Yes| SUBAGENT["🦑 Orchestrator-Workers"]
     SPECIAL -->|No| INDEP{Independent<br/>subtasks?}:::decision
 
     INDEP -->|Yes| DOMAIN{Same<br/>domain?}:::decision
@@ -465,7 +465,7 @@ flowchart TD
 |----------|-------|------|
 | Destructive operation? | 🧙 Wizard Workflows | Continue |
 | Single step? | Direct Execution | Continue |
-| Needs specialization? | 🦑 Subagent Orchestration | Continue |
+| Needs specialization? | 🦑 Orchestrator-Workers | Continue |
 | Steps independent? | 🚂 Parallel / 🧬 Master-Clone | Continue |
 | Has methodology? | 📚 Progressive Skills | Prompt Chaining |
 | Long running? | Add 🖥️ Multi-Window | ✅ Execute |
@@ -496,6 +496,6 @@ flowchart TD
 
 **━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━**
 
-[← 04 Use Cases](04-USE-CASES.md) • [🏠 Home](README.md) • [06 Glossary →](06-MAPPING-GLOSSARY.md)
+[← 05 Use Cases](05-USE-CASES.md) • [🏠 Home](README.md) • [07 Glossary →](07-MAPPING-GLOSSARY.md)
 
 </div>

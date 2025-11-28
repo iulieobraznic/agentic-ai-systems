@@ -1,24 +1,55 @@
-<h1 align="center">Agentic : Patterns / Workflows / Use Cases</h1>
+<div align="center">
 
-<p align="center">
-  <strong>Design patterns for building agentic AI systems with Claude Code CLI</strong>
-</p>
+# Agentic AI Systems 🐔
 
-<p align="center">
-  <em>Curated collection of validated orchestration patterns from official Anthropic documentation</em>
-</p>
+<strong>Workflows & Agents for AI orchestration | Explained simply</strong>
 
-<p align="center">
-  <a href="https://github.com/hesreallyhim/awesome-claude-code">
-    <img src="https://awesome.re/mentioned-badge.svg" alt="Mentioned in Awesome Claude Code"/>
-  </a>
-</p>
+<sub>Mermaid diagrams 📊 • Clear examples 💡 • Chicken metaphors 🐔🐦
+Because complex patterns deserve simple explanations.</sub>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Agentic_Patterns-7-8b5cf6?style=flat-square" alt="7 Agentic Patterns"/>
-  <img src="https://img.shields.io/badge/Components-4-ec4899?style=flat-square" alt="4 Components"/>
-  <img src="https://img.shields.io/badge/Layers-5-f59e0b?style=flat-square" alt="5 Layers"/>
-</p>
+
+
+<!-- Credibility -->
+<a href="https://docs.anthropic.com/en/docs/claude-code">
+  <img src="https://img.shields.io/badge/Claude_Code-CLI-8b5cf6?style=flat-square&logo=anthropic" alt="Claude Code CLI"/>
+</a>
+<a href="https://www.anthropic.com/research/building-effective-agents">
+  <img src="https://img.shields.io/badge/Based_on-Anthropic_Research-ec4899?style=flat-square" alt="Anthropic Research"/>
+</a>
+<a href="https://github.com/hesreallyhim/awesome-claude-code">
+  <img src="https://awesome.re/mentioned-badge-flat.svg" alt="Awesome Claude Code"/>
+</a>
+
+<br/>
+
+<!-- Stats -->
+<img src="https://img.shields.io/badge/Workflows-5+Baseline-8b5cf6?style=flat-square" alt="5 Workflows + Baseline"/>
+<img src="https://img.shields.io/badge/Agents-1-ec4899?style=flat-square" alt="1 Agent"/>
+<img src="https://img.shields.io/badge/Components-4-10b981?style=flat-square" alt="4 Components"/>
+<img src="https://img.shields.io/badge/🏴‍☠️🪐-SuperNovae-1e293b?style=flat-square" alt="SuperNovae Studio"/>
+
+
+
+
+</div>
+
+---
+
+## Why This Repo? 🪺
+
+Building effective AI agents requires proven patterns, not guesswork.
+
+This repository distills **official Anthropic documentation** into actionable designs:
+
+| What you get | Why it matters |
+|--------------|----------------|
+| 📊 **Mermaid diagrams** | See the architecture, don't just read about it |
+| 💡 **Clear examples** | Copy-paste ready, not abstract theory |
+| 🗺️ **Decision guides** | Know which pattern fits your use case |
+| 🐔 **Chicken metaphors** | Remember patterns, not jargon |
+
+*Why chickens? Because 🐔 Main Agent spawning 🐦 Subagents
+is way easier to remember than "hierarchical agent orchestration".*
 
 ---
 
@@ -26,28 +57,25 @@
 
 ```mermaid
 mindmap
-  root((Agentic Patterns))
+  root((Agentic Systems))
+    Baseline 1
+      🏎️ Direct Execution
+    Workflows 5
+      ⛓️ Prompt Chaining
+      🚦 Routing
+      🛤️ Parallelization
+      🦑 Orchestrator-Workers
+      🩻 Evaluator-Optimizer
+    Agents 1
+      🐉 Autonomous Agents
     Components 4
       🐦 Subagent
       🦴 Slash Command
       📚 Skill
       🪝 Hook
-    Patterns 7
-      🏎️ Direct Execution
-      ⛓️ Prompt Chaining
-      🚦 Routing
-      🛤️ Parallelization
-      🦑 Subagent Orchestration
-      🩻 Evaluator-Optimizer
-      🐉 Autonomous Agents
     Mechanisms 2
       📚 Progressive Skills
       🎛️ Programmatic Orchestration
-    Variants 4
-      🧙 Wizard Workflow
-      🚂 Parallel Tool Calling
-      🧬 Master-Clone
-      🖥️ Multi-Window Context
 ```
 
 ---
@@ -58,35 +86,54 @@ mindmap
 |--------------|-----------|
 | **Learn the basics** | [01-OFFICIAL-TERMINOLOGY.md](01-OFFICIAL-TERMINOLOGY.md) |
 | **Understand architecture** | [02-LAYER-ARCHITECTURE.md](02-LAYER-ARCHITECTURE.md) |
-| **See real examples** | [04-USE-CASES.md](04-USE-CASES.md) |
-| **Choose a pattern** | [05-PATTERN-SELECTION-GUIDE.md](05-PATTERN-SELECTION-GUIDE.md) |
-| **Implement a pattern** | [03-AGENTIC-PATTERNS.md](03-AGENTIC-PATTERNS.md) |
+| **See real examples** | [05-USE-CASES.md](05-USE-CASES.md) |
+| **Choose a pattern** | [06-SELECTION-GUIDE.md](06-SELECTION-GUIDE.md) |
+| **Implement workflows** | [03-WORKFLOWS.md](03-WORKFLOWS.md) |
+| **Implement agents** | [04-AGENTS.md](04-AGENTS.md) |
 
 ---
 
-## Agentic Patterns (7)
+## Agentic Systems
+
+> **Agentic Systems** = Umbrella term for any system using LLMs with tools and control flow.
+> Encompasses **Baseline** (simple), **Workflows** (predefined), and **Agents** (dynamic).
+
+> **Anthropic Progression:** 🧱 Building Block → Workflows → Agents
+> First the Augmented LLM block, then workflows composed of these blocks, then agents that reuse blocks in loops with real-world feedback.
+
+### Baseline — Pattern #0 (Single Augmented LLM)
 
 | # | Pattern | Description | Complexity |
 |---|---------|-------------|:----------:|
-| 1 | **🏎️ Direct Execution** | Baseline - no orchestration needed | None |
-| 2 | **⛓️ Prompt Chaining** | Sequential steps, each feeding the next | Low |
-| 3 | **🚦 Routing** | Direct inputs to specialized handlers | Low |
-| 4 | **🛤️ Parallelization** | Execute independent tasks simultaneously | Medium |
-| 5 | **🦑 Subagent Orchestration** | Delegate to specialized agents with isolated context | High |
-| 6 | **🩻 Evaluator-Optimizer** | Iterative improvement via feedback loops | Medium |
-| 7 | **🐉 Autonomous Agents** | Self-directed with minimal human guidance | Very High |
+| 0 | **🏎️ Direct Execution** | Single augmented LLM call - no orchestration | None |
 
-### Mechanisms (implementation, not patterns)
+### Workflows (5) — Predefined Code Paths
+
+| # | Workflow | Description | Complexity |
+|---|----------|-------------|:----------:|
+| 1 | **⛓️ Prompt Chaining** | Sequential steps, each feeding the next | Low |
+| 2 | **🚦 Routing** | Direct inputs to specialized handlers | Low |
+| 3 | **🛤️ Parallelization** | Execute independent tasks simultaneously | Medium |
+| 4 | **🦑 Orchestrator-Workers** | Delegate to specialized subagents | High |
+| 5 | **🩻 Evaluator-Optimizer** | Iterative improvement via feedback loops | Medium |
+
+### Agents (1) — Dynamic Self-Direction
+
+| # | Agent | Description | Complexity |
+|---|-------|-------------|:----------:|
+| 6 | **🐉 Autonomous Agents** | Self-directed with minimal human guidance | Very High |
+
+### Mechanisms (implementation layer)
 
 | Mechanism | Description |
 |-----------|-------------|
-| **📚 Progressive Skills** | On-demand loading of modular capabilities |
-| **🎛️ Programmatic Orchestration** | External code controls agent invocation |
+| **📚 Progressive Skills** | On-demand loading of modular capabilities (implements 🚦 Routing) |
+| **🎛️ Programmatic Orchestration** | External code controls agent invocation (implements ⛓️ Chaining) |
 
-### Pattern Variants
+### Workflow Variants
 
-| Variant | Parent Pattern | Description |
-|---------|----------------|-------------|
+| Variant | Parent | Description |
+|---------|--------|-------------|
 | **🧙 Wizard Workflow** | ⛓️ Prompt Chaining | Multi-step with user confirmation |
 | **🚂 Parallel Tool Calling** | 🛤️ Parallelization | Multiple tools in single message |
 | **🧬 Master-Clone** | 🛤️ Parallelization | Isolated clones for independent domains |
@@ -122,13 +169,13 @@ mindmap
 | File | Content |
 |------|---------|
 | [00-OVERVIEW.md](00-OVERVIEW.md) | Entry point, quick reference, emoji guide |
-| [01-OFFICIAL-TERMINOLOGY.md](01-OFFICIAL-TERMINOLOGY.md) | Components: 🐦 Subagent, 🦴 Command, 📚 Skill, 🪝 Hook |
+| [01-OFFICIAL-TERMINOLOGY.md](01-OFFICIAL-TERMINOLOGY.md) | Components, patterns, visual standards (unified reference) |
 | [02-LAYER-ARCHITECTURE.md](02-LAYER-ARCHITECTURE.md) | 5-Layer system architecture |
-| [03-AGENTIC-PATTERNS.md](03-AGENTIC-PATTERNS.md) | 7 unified patterns + 2 mechanisms |
-| [04-USE-CASES.md](04-USE-CASES.md) | Real-world validated examples |
-| [05-PATTERN-SELECTION-GUIDE.md](05-PATTERN-SELECTION-GUIDE.md) | Decision trees for choosing patterns |
-| [06-MAPPING-GLOSSARY.md](06-MAPPING-GLOSSARY.md) | Cross-reference & definitions |
-| [07-STYLE-GUIDE.md](07-STYLE-GUIDE.md) | Colors, emojis, Mermaid standards |
+| [03-WORKFLOWS.md](03-WORKFLOWS.md) | Baseline + 5 Workflows + variants + mechanisms |
+| [04-AGENTS.md](04-AGENTS.md) | Autonomous Agents + Multi-Window Context |
+| [05-USE-CASES.md](05-USE-CASES.md) | Real-world validated examples |
+| [06-SELECTION-GUIDE.md](06-SELECTION-GUIDE.md) | Decision trees for choosing patterns |
+| [07-MAPPING-GLOSSARY.md](07-MAPPING-GLOSSARY.md) | Cross-reference & definitions |
 
 ---
 
@@ -203,25 +250,25 @@ Long-Running (>10 min)        → 🖥️ Multi-Window Context
 .
 ├── README.md                           # This file
 ├── 00-OVERVIEW.md                      # Entry point, quick reference
-├── 01-OFFICIAL-TERMINOLOGY.md          # Components definitions
+├── 01-OFFICIAL-TERMINOLOGY.md          # Components, patterns, visual standards
 ├── 02-LAYER-ARCHITECTURE.md            # 5-Layer system architecture
-├── 03-AGENTIC-PATTERNS.md              # 7 unified patterns + 2 mechanisms
-├── 04-USE-CASES.md                     # Real-world examples
-├── 05-PATTERN-SELECTION-GUIDE.md       # Decision trees
-├── 06-MAPPING-GLOSSARY.md              # Cross-reference & definitions
-└── 07-STYLE-GUIDE.md                   # Colors, emojis, Mermaid standards
+├── 03-WORKFLOWS.md                         # Baseline + 5 Workflows + variants
+├── 04-AGENTS.md                            # Autonomous Agents + Multi-Window
+├── 05-USE-CASES.md                         # Real-world examples
+├── 06-SELECTION-GUIDE.md                   # Decision trees
+└── 07-MAPPING-GLOSSARY.md                  # Cross-reference & definitions
 ```
 
 ---
 
 ## Contributing
 
-We welcome contributions! This repository aims to be the definitive collection of Claude agentic patterns.
+We welcome contributions! This repository aims to be the definitive collection of Claude agentic systems.
 
 ### Ways to Contribute
 
-- **Add new patterns** - Document patterns from Anthropic sources
-- **Improve existing patterns** - Add examples, clarify explanations
+- **Add new workflows/agents** - Document systems from Anthropic sources
+- **Improve existing content** - Add examples, clarify explanations
 - **Fix issues** - Correct errors, update outdated information
 - **Add translations** - Help make patterns accessible globally
 

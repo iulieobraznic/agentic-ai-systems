@@ -1,54 +1,130 @@
 <div align="center">
 
-[🏠 Home](README.md) • [📖 Overview](00-OVERVIEW.md) • **03 Agentic Patterns**
+[🏠 Home](README.md) • [📖 Overview](00-OVERVIEW.md) • **03 Workflows**
 
 ━━━━━━━━━●━━━━━━━━━━━━━━━━━━━━━ `3/8`
 
-[← 02 Architecture](02-LAYER-ARCHITECTURE.md) • [04 Use Cases →](04-USE-CASES.md)
+[← 02 Architecture](02-LAYER-ARCHITECTURE.md) • [04 Agents →](04-AGENTS.md)
 
 </div>
 
 ---
 
-# Agentic Patterns
+# Workflows
 
-> 7 patterns for building Claude Code agentic systems + 2 implementation mechanisms
+> **Definition (Anthropic):** Systems where LLMs and tools are orchestrated through **predefined code paths**.
+>
+> — [Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents), December 2024
+
+### Anthropic's Progression
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
+flowchart LR
+    classDef block fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#ffffff
+    classDef workflow fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
+    classDef agent fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#ffffff
+
+    A["🧱 Augmented LLM<br/><i>Building block</i>"]:::block
+    W["⚙️ Workflows<br/><i>Composed blocks</i>"]:::workflow
+    AG["🤖 Agents<br/><i>Loops + feedback</i>"]:::agent
+
+    A -->|"compose"| W
+    W -->|"add autonomy"| AG
+```
+
+| Baseline | Workflows | Agents |
+|----------|-----------|--------|
+| [0. 🏎️ Direct Execution](#0-️-baseline-direct-execution) | [1. ⛓️ Prompt Chaining](#1-️-prompt-chaining) | [6. 🐉 Autonomous](04-AGENTS.md#1--autonomous-agents) |
+| *(single augmented LLM call)* | [2. 🚦 Routing](#2--routing) | *(self-directed loops)* |
+| | [3. 🛤️ Parallelization](#3-️-parallelization) | |
+| | [4. 🦑 Orchestrator-Workers](#4--orchestrator-workers) | |
+| | [5. 🩻 Evaluator-Optimizer](#5--evaluator-optimizer) | |
+
+> **Key characteristic:** The **CODE** controls the flow, not the LLM
+
+---
+
+## Building Block: The Augmented LLM
+
+> The basic building block of agentic systems is an LLM enhanced with **retrieval**, **tools**, and **memory**.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
+flowchart TB
+    classDef retrieval fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#ffffff
+    classDef tools fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
+    classDef memory fill:#06b6d4,stroke:#0891b2,stroke-width:2px,color:#ffffff
+    classDef llm fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#ffffff
+
+    R[("Retrieval<br/>RAG, search")]:::retrieval
+    T{{"Tools<br/>MCP, Bash"}}:::tools
+    M[/"Memory<br/>Context"/]:::memory
+
+    LLM(["LLM<br/>Generates • Selects • Decides"]):::llm
+
+    R --> LLM
+    T --> LLM
+    M --> LLM
+```
+
+> **Key insight:** Focus on tailoring capabilities to your specific use case and ensuring they provide an easy, well-documented interface for the LLM.
+
+All workflows below assume each LLM call has access to these augmented capabilities.
+
+---
 
 ## 📑 Table of Contents
 
-| # | Pattern | Description |
-|---|---------|-------------|
-| 1 | [🏎️ Direct Execution](#pattern-1-️-direct-execution) | Baseline (no orchestration) |
-| 2 | [⛓️ Prompt Chaining](#pattern-2-️-prompt-chaining) | Sequential steps |
-| 3 | [🚦 Routing](#pattern-3--routing) | Classification & dispatch |
-| 4 | [🛤️ Parallelization](#pattern-4-️-parallelization) | Concurrent execution |
-| 5 | [🦑 Subagent Orchestration](#pattern-5--subagent-orchestration) | Manager + specialists |
-| 6 | [🩻 Evaluator-Optimizer](#pattern-6--evaluator-optimizer) | Iterative refinement |
-| 7 | [🐉 Autonomous Agents](#pattern-7--autonomous-agents) | Self-directed execution |
-| ⚙️ | [Mechanisms](#mechanisms) | Progressive Skills, Programmatic Orchestration |
-| ⚔️ | [Pattern Comparisons](#pattern-comparisons) | Side-by-side VS diagrams |
-| 📋 | [Best Practices](#best-practices) | Operational guidelines |
+| # | Pattern | Description | Complexity |
+|---|---------|-------------|:----------:|
+| 0 | [🏎️ Baseline](#0--baseline-direct-execution) | Single augmented LLM call | None |
+| 1 | [⛓️ Prompt Chaining](#1-️-prompt-chaining) | Sequential steps, output→input | Low |
+| 2 | [🚦 Routing](#2--routing) | Classify then dispatch | Low |
+| 3 | [🛤️ Parallelization](#3-️-parallelization) | Concurrent independent tasks | Medium |
+| 4 | [🦑 Orchestrator-Workers](#4--orchestrator-workers) | Manager + specialized workers | High |
+| 5 | [🩻 Evaluator-Optimizer](#5--evaluator-optimizer) | Generate → Evaluate → Improve | Medium |
+| | [Variants](#workflow-variants) | Wizard, Parallel Tools, Clone | — |
+| | [Mechanisms](#implementation-mechanisms) | Progressive Skills, Programmatic | — |
+
+> **Note:** Anthropic lists 5 workflows. We include "Baseline" (Direct Execution) as pattern #0 to show the progression from simple to complex. It represents the foundational single LLM call before orchestration is added.
 
 ---
 
 ## Terminology
 
+| Symbol | Term | Description |
+|:------:|------|-------------|
+| 🐔 | **Main Agent** | Claude Code orchestrator (the hen that coordinates) |
+| 🐦 | **Subagent** | Delegated worker spawned via Task (the bird) |
+| 🪺 | **Spawn (Task)** | Action to create 🐦 subagents (via Task built-in tool) |
+| 📚 | **Skill** | Loaded knowledge that enhances 🐔 capabilities |
+| 🚧 | **Gate** | Checkpoint that validates output before proceeding to next step |
+
+### Hierarchy
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
+flowchart LR
+    classDef user fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#ffffff
+    classDef main fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#ffffff
+    classDef sub fill:#ec4899,stroke:#db2777,stroke-width:2px,color:#ffffff
+    classDef blocked fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#ffffff
+
+    U1["🙋‍♀️📥 User"]:::user
+    MA["🐔 Main Agent"]:::main
+    SA["🐦 Subagent"]:::sub
+    U2["💁‍♀️📤 User"]:::user
+
+    U1 -->|request| MA
+    MA -->|"🪺 spawn"| SA
+    SA -->|result| MA
+    MA -->|response| U2
+
+    SA x-.-x|"❌ cannot spawn"| SA2["🐦 Subagent"]:::blocked
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         UNIFIED TERMINOLOGY                                  │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  🐔 Main Agent    → Claude Code orchestrator (the hen that coordinates)    │
-│  🐦 Subagent      → Delegated worker spawned via Task (the bird)           │
-│  🪺 Spawn (Task)  → Action to create 🐦 subagents (via Task built-in tool) │
-│  📚 Skill         → Loaded knowledge that enhances 🐔 capabilities          │
-│                                                                             │
-│  HIERARCHY: 🙋‍♀️📥 User → 🐔 Main Agent → 🐦 Subagent → 💁‍♀️📤 User              │
-│                                                                             │
-│  RULE: 🐦 Subagents CANNOT spawn other 🐦 subagents (flat hierarchy)        │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+
+> **Rule:** 🐦 Subagents CANNOT spawn other 🐦 subagents (flat hierarchy)
 
 ---
 
@@ -58,7 +134,7 @@
 %%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
 flowchart TD
     classDef question fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#ffffff
-    classDef pattern fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
+    classDef workflow fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
     classDef simple fill:#64748b,stroke:#475569,stroke-width:2px,color:#ffffff
 
     START["🙋‍♀️📥 Task Received"] --> Q1{"Single step?"}:::question
@@ -66,28 +142,23 @@ flowchart TD
     Q1 -->|Yes| P1["🏎️ Direct Execution"]:::simple
     Q1 -->|No| Q2{"Steps dependent?"}:::question
 
-    Q2 -->|Yes, sequential| P2["⛓️ Prompt Chaining"]:::pattern
+    Q2 -->|Yes, sequential| P2["⛓️ Prompt Chaining"]:::workflow
     Q2 -->|No, parallel| Q3{"Same or different tasks?"}:::question
 
-    Q3 -->|Same task, different data| P4["🛤️ Parallelization"]:::pattern
-    Q3 -->|Different tasks| P5["🦑 Subagent Orchestration"]:::pattern
+    Q3 -->|Same task, different data| P4["🛤️ Parallelization"]:::workflow
+    Q3 -->|Different tasks| P5["🦑 Orchestrator-Workers"]:::workflow
 
-    Q2 -->|Need classification first| P3["🚦 Routing"]:::pattern
+    Q2 -->|Need classification first| P3["🚦 Routing"]:::workflow
 
     START --> Q4{"Quality critical?"}:::question
-    Q4 -->|Yes, needs iteration| P6["🩻 Evaluator-Optimizer"]:::pattern
-
-    START --> Q5{"Open-ended exploration?"}:::question
-    Q5 -->|Yes| P7["🐉 Autonomous Agents"]:::pattern
+    Q4 -->|Yes, needs iteration| P6["🩻 Evaluator-Optimizer"]:::workflow
 ```
 
 ---
 
-## Pattern 1: 🏎️ Direct Execution
+## 0. 🏎️ Baseline (Direct Execution)
 
-### Definition
-
-🐔 Main Agent handles the request directly without spawning 🐦 subagents or complex orchestration.
+> **Definition:** Single augmented LLM call without orchestration — the foundation before adding workflow complexity. Not counted as a workflow by Anthropic, but included here to show the full progression.
 
 ### Diagram
 
@@ -101,37 +172,29 @@ flowchart LR
     MA -->|"🐔📤"| OUT["💁‍♀️📤 User Receives"]:::user
 ```
 
-### When to Use
+### When to use this workflow
 
 - Simple, single-step tasks
 - No need for specialization
 - Quick operations (file read, simple edit, search)
 
-### When NOT to Use
+### Examples where direct execution is useful
+
+- "What's in the config.json file?"
+- "Add a console.log statement to this function"
+- "Search for usages of `useState`"
+
+### When NOT to use
 
 - Complex multi-step workflows
 - Tasks requiring multiple specializations
 - Large-scale operations
 
-### Example
-
-```
-User: "What's in the config.json file?"
-
-🐔 Main Agent:
-  - Uses Read tool to read config.json
-  - Returns content to user
-
-No 🐦 subagents needed.
-```
-
 ---
 
-## Pattern 2: ⛓️ Prompt Chaining
+## 1. ⛓️ Prompt Chaining
 
-### Definition
-
-Breaking a task into sequential steps where each step's output becomes the next step's input.
+> **Definition:** Decompose a task into a sequence of steps, where each LLM call processes the output of the previous one.
 
 ### Diagram
 
@@ -140,18 +203,39 @@ Breaking a task into sequential steps where each step's output becomes the next 
 flowchart LR
     classDef user fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#ffffff
     classDef main fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
+    classDef gate fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#ffffff
+    classDef exit fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#ffffff
 
-    USER["🙋‍♀️📥 User Request"]:::user --> P1["🐔💭 Step 1"]:::main
-    P1 -->|"🐔📤"| P2["🐔💭 Step 2"]:::main
-    P2 -->|"🐔📤"| P3["🐔💭 Step 3"]:::main
-    P3 -->|"🐔📤"| OUT["💁‍♀️📤 User Receives"]:::user
+    USER["🙋‍♀️📥"]:::user --> P1["🐔💭 Step 1"]:::main
+    P1 -->|"🐔📤"| G1{"🚧 Gate"}:::gate
+    G1 -->|Pass| P2["🐔💭 Step 2"]:::main
+    G1 -.->|Fail| EXIT["❌ Exit"]:::exit
+    P2 -->|"🐔📤"| G2{"🚧 Gate"}:::gate
+    G2 -->|Pass| P3["🐔💭 Step 3"]:::main
+    G2 -.->|Fail| EXIT
+    P3 -->|"🐔📤"| OUT["💁‍♀️📤"]:::user
 ```
 
-### Use Cases
+### 🚧 Gate
 
-| Use Case | Example |
-|----------|---------|
-| Document processing | Extract → Analyze → Summarize |
+> **Definition:** A checkpoint between steps that validates the output before proceeding. If validation fails, the chain exits early instead of propagating errors downstream.
+
+**Gates can check for:**
+- Output format/structure validity
+- Quality thresholds (confidence scores, completeness)
+- Safety checks (content moderation, guardrails)
+- Business rules (required fields, constraints)
+
+### When to use this workflow
+
+This workflow is ideal for situations where the task can be easily and cleanly decomposed into fixed subtasks. The main goal is to trade off latency for higher accuracy, by making each LLM call an easier task.
+
+### Examples where prompt chaining is useful
+
+| Use Case | Chain |
+|----------|-------|
+| Marketing | Generate copy → Translate to target language |
+| Documents | Write outline → Validate criteria → Write document |
 | Code generation | Plan → Implement → Review |
 | Data transformation | Parse → Transform → Validate |
 
@@ -168,20 +252,14 @@ Step 3: "Generate documentation for each function"
         → [documented code]
 ```
 
-### When to Use
-
-- Tasks have clear sequential dependencies
-- Each step's quality affects the next
-- Need checkpoints between steps
-
-### When NOT to Use
+### When NOT to use
 
 - Steps can be done independently (use 🛤️ Parallelization)
 - Simple single-step tasks (use 🏎️ Direct Execution)
 
-### Variant: 🧙 Wizard Workflows
+### Variant: 🧙 Wizard Workflow
 
-Multi-step processes with explicit 🙆‍♀️ user confirmation at each phase using ❓ `AskUserQuestion`.
+Multi-step process with explicit 🙆‍♀️ user confirmation at each phase using ❓ `AskUserQuestion`.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
@@ -210,11 +288,9 @@ stateDiagram-v2
 
 ---
 
-## Pattern 3: 🚦 Routing
+## 2. 🚦 Routing
 
-### Definition
-
-Directing inputs to specialized handlers based on classification or intent.
+> **Definition:** Classify an input and direct it to a specialized followup task. This allows separation of concerns and more specialized prompts.
 
 ### Diagram
 
@@ -226,7 +302,7 @@ flowchart TB
     classDef subagent fill:#ec4899,stroke:#db2777,stroke-width:2px,color:#ffffff
     classDef idle fill:#94a3b8,stroke:#64748b,stroke-width:2px,color:#ffffff
 
-    INPUT["🙋‍♀️📥 User Request"]:::user --> ROUTER{"🐔🚦 Route"}:::main
+    INPUT["🙋‍♀️📥 User Request"]:::user --> ROUTER{"🐔🚦 Classify & Route"}:::main
 
     ROUTER -.->|"Type A"| HA["🐦💤 Handler A"]:::idle
     ROUTER -->|"🐔🪺 Type B"| HB["🐦⚡ Handler B"]:::subagent
@@ -252,32 +328,30 @@ flowchart TB
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Use Cases
+### When to use this workflow
 
-| Use Case | Example |
-|----------|---------|
-| Customer support | Bug → Tech Team, Billing → Finance |
+Routing works well for complex tasks where there are distinct categories that are better handled separately, and where classification can be handled accurately.
+
+### Examples where routing is useful
+
+| Use Case | Routes |
+|----------|--------|
+| Customer support | Bug → Tech Team, Billing → Finance, General → FAQ |
 | Code tasks | Bug fix → Debugger, New feature → Builder |
-| Content | Question → Q&A, Task → Executor |
+| Model routing | Easy → Claude Haiku 4.5, Hard → Claude Sonnet 4.5 |
+| Content | Question → Q&A handler, Task → Executor |
 
-### When to Use
-
-- Inputs have distinct types requiring different handling
-- Specialized expertise improves quality
-- Clear classification criteria exist
-
-### When NOT to Use
+### When NOT to use
 
 - All inputs require same processing
 - Classification is unreliable
+- Categories overlap significantly
 
 ---
 
-## Pattern 4: 🛤️ Parallelization
+## 3. 🛤️ Parallelization
 
-### Definition
-
-Executing independent tasks simultaneously and merging results.
+> **Definition:** Execute independent tasks simultaneously and aggregate outputs programmatically. Manifests in two key variations: **Sectioning** and **Voting**.
 
 ### Core Concept
 
@@ -302,14 +376,14 @@ flowchart LR
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  ⚠️  IMPORTANT: Parallelization vs Subagent Orchestration                    │
+│  ⚠️  IMPORTANT: Parallelization vs Orchestrator-Workers                    │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  In Parallelization, all spawned subagents are IDENTICAL.                   │
 │  Same prompt, same capabilities. They are INTERCHANGEABLE.                  │
 │                                                                             │
 │  🛤️ Parallelization:        🐦⚡ = 🐦⚡ = 🐦⚡   (clones)                      │
-│  🦑 Subagent Orchestration:  🐦🔒 ≠ 🐦⚡ ≠ 🐦🎨   (specialists)                │
+│  🦑 Orchestrator-Workers:  🐦🔒 ≠ 🐦⚡ ≠ 🐦🎨   (specialists)                │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -318,7 +392,7 @@ flowchart LR
 
 #### Type 1: 🛤️ Sectioning (Split DATA)
 
-Split large data into chunks, process each chunk the same way, combine all results.
+Break a task into independent subtasks run in parallel, then combine ALL results.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
@@ -335,9 +409,13 @@ flowchart LR
     S_MERGE -->|"🐔📤"| S_OUT["💁‍♀️📤"]:::user
 ```
 
+**Examples:**
+- Guardrails: One instance processes queries, another screens for inappropriate content
+- Evals: Each LLM call evaluates a different aspect of model performance
+
 #### Type 2: 🗳️ Voting (Same TASK, pick BEST)
 
-Run the same task multiple times, compare results, pick the best one.
+Run the same task multiple times to get diverse outputs, then select the best.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
@@ -358,12 +436,26 @@ flowchart LR
     VOTE -->|"🐔✅ B wins"| BEST["🏆 Best"]:::success
 ```
 
+**Examples:**
+- Code vulnerability review with multiple prompts
+- Content moderation with different vote thresholds
+
 ### Summary
 
 | Type | Workers | Input | Output |
 |------|---------|-------|--------|
 | **🛤️ Sectioning** | IDENTICAL | Different DATA chunks | Combine ALL |
 | **🗳️ Voting** | IDENTICAL | Same DATA | Pick ONE best |
+
+### When to use this workflow
+
+Parallelization is effective when the divided subtasks can be parallelized for speed, or when multiple perspectives are needed for higher confidence results.
+
+### When NOT to use
+
+- Tasks depend on each other's output
+- Sequential order matters
+- Limited resources
 
 ### Variant: 🚂 Parallel Tool Calling
 
@@ -391,18 +483,6 @@ flowchart TB
     RESULTS --> MA
 
     style TOOLS fill:#dbeafe,stroke:#3b82f6,stroke-width:2px
-```
-
-**Implementation:**
-```python
-# Single message with multiple parallel 🔧 tool calls
-[
-    Read(file_path="/src/auth.ts"),
-    Read(file_path="/src/user.ts"),
-    Read(file_path="/src/session.ts"),
-    Grep(pattern="password", path="/src")
-]
-# All execute concurrently, results returned together
 ```
 
 ### Variant: 🧬 Master-Clone
@@ -433,26 +513,11 @@ flowchart TB
     MERGE --> MA
 ```
 
-**Key Characteristic:** Each 🐦 clone operates in complete isolation (no shared memory, no inter-clone communication).
-
-### When to Use
-
-- Tasks have no dependencies on each other
-- Speed is important
-- Resources allow concurrent execution
-
-### When NOT to Use
-
-- Tasks depend on each other's output
-- Sequential order matters
-
 ---
 
-## Pattern 5: 🦑 Subagent Orchestration
+## 4. 🦑 Orchestrator-Workers
 
-### Definition
-
-🐔 Main Agent 🪺 spawns specialized 🐦 subagents via the `Task` tool to handle complex, domain-specific tasks.
+> **Definition:** A central LLM dynamically breaks down tasks, delegates them to worker LLMs, and synthesizes their results.
 
 ### Diagram
 
@@ -480,20 +545,35 @@ flowchart TB
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  🦑 SUBAGENT ORCHESTRATION: Different specialists                           │
+│  🦑 ORCHESTRATOR-WORKERS: Different specialists                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  Each 🐦 subagent has a DIFFERENT expertise and does a DIFFERENT task.     │
 │                                                                             │
+│  Key difference from 🛤️ Parallelization: subtasks aren't pre-defined,      │
+│  but determined by the orchestrator based on the specific input.            │
+│                                                                             │
 │  Analogy: Hospital team → Different experts collaborate                     │
 │           (Chef + Pastry + Sommelier, not 3 cooks making same recipe)      │
 │                                                                             │
-│  Compare to 🛤️ Parallelization:                                            │
-│  - Parallelization: Same worker + Different data (assembly line)           │
-│  - Orchestration: Different workers + Same data (expert team)              │
+│  Compare:                                                                   │
+│  - 🛤️ Parallelization: Same worker + Different data (assembly line)        │
+│  - 🦑 Orchestration: Different workers + Same data (expert team)           │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
+
+### When to use this workflow
+
+This workflow is well-suited for complex tasks where you can't predict the subtasks needed. The key difference from parallelization is its flexibility—subtasks aren't pre-defined, but determined by the orchestrator based on the specific input.
+
+### Examples where orchestrator-workers is useful
+
+| Use Case | Orchestration |
+|----------|---------------|
+| Coding products | Make complex changes to multiple files dynamically |
+| Search tasks | Gather and analyze from multiple sources |
+| PR Review | Security + Performance + Style experts |
 
 ### Main Agent Responsibilities
 
@@ -538,24 +618,16 @@ Review the provided code and report:
 | **Isolated context** | Each 🐦 subagent starts fresh, no shared memory |
 | **Report to orchestrator** | Results flow back to 🐔 Main Agent only |
 
-### When to Use
-
-- Complex tasks require multiple specializations
-- Workers can operate independently
-- Need centralized coordination
-
-### When NOT to Use
+### When NOT to use
 
 - Simple tasks not worth decomposition overhead
 - Workers need heavy inter-communication
 
 ---
 
-## Pattern 6: 🩻 Evaluator-Optimizer
+## 5. 🩻 Evaluator-Optimizer
 
-### Definition
-
-Generate candidates, evaluate them, and iteratively improve until quality threshold is met.
+> **Definition:** One LLM call generates a response while another provides evaluation and feedback in a loop until quality threshold is met.
 
 ### Diagram
 
@@ -600,13 +672,19 @@ sequenceDiagram
     end
 ```
 
-### Evaluation Criteria Examples
+### When to use this workflow
 
-| Domain | Criteria |
-|--------|----------|
-| **Code** | Tests pass, linting clean, no security issues |
-| **Text** | Clarity score, factual accuracy, tone match |
-| **Design** | Usability score, accessibility, consistency |
+This workflow is particularly effective when we have clear evaluation criteria, and when iterative refinement provides measurable value. Two signs of good fit:
+1. LLM responses can be demonstrably improved when feedback is articulated
+2. The LLM can provide such feedback
+
+### Examples where evaluator-optimizer is useful
+
+| Domain | Criteria | Use Case |
+|--------|----------|----------|
+| **Code** | Tests pass, lint clean, no security issues | Code generation |
+| **Text** | Clarity score, factual accuracy, tone match | Literary translation |
+| **Search** | Comprehensiveness, relevance | Complex research tasks |
 
 ### Example: Code Generation
 
@@ -623,13 +701,36 @@ Attempt 3: Complete implementation
 Evaluator: "Pass - all criteria met"
 ```
 
-### When to Use
+### Advanced: Self-Correction Chains
 
-- Quality is critical
-- Clear evaluation criteria exist
-- Iteration improves results
+You can chain prompts to have Claude **review its own work**. This catches errors and refines outputs, especially for high-stakes tasks.
 
-### When NOT to Use
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
+sequenceDiagram
+    participant U as 🙋‍♀️ User
+    participant G as 🐔💭 Generator
+    participant R as 🐔🔍 Reviewer
+
+    U->>G: 🙋‍♀️📥 "Summarize this research paper"
+    G->>G: 🐔💭 Generate summary
+    G->>R: 🐔📤 Submit for self-review
+    R->>R: 🐔🔍 Check accuracy, clarity, completeness
+    alt ✅ Quality OK
+        R->>U: 💁‍♀️📤 Final summary
+    else ❌ Issues found
+        R->>G: 🐔🔄 "Missing methodology details"
+        G->>G: 🐔💭 Regenerate with feedback
+        G->>R: 🐔📤 Submit improved version
+    end
+```
+
+**Use Self-Correction for:**
+- Research summaries requiring accuracy
+- Code that must meet strict criteria
+- Content requiring specific style/tone
+
+### When NOT to use
 
 - First attempt is usually good enough
 - No clear quality metrics
@@ -637,150 +738,19 @@ Evaluator: "Pass - all criteria met"
 
 ---
 
-## Pattern 7: 🐉 Autonomous Agents
+## Workflow Variants
 
-### Definition
-
-Long-running agents that independently plan, execute, and adapt based on environment feedback.
-
-### Diagram
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
-flowchart TB
-    classDef user fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#ffffff
-    classDef data fill:#06b6d4,stroke:#0891b2,stroke-width:2px,color:#ffffff
-    classDef main fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
-    classDef state fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff
-    classDef wizard fill:#14b8a6,stroke:#0d9488,stroke-width:2px,color:#ffffff
-
-    GOAL["🙋‍♀️📥 Goal"]:::user --> PLAN["🐔📋 Plan"]:::main
-    PLAN --> ACT["🐔⚡ Act"]:::state
-    ACT --> ENV["🌍 Environment"]:::data
-    ENV --> OBSERVE["🐔👀 Observe"]:::data
-    OBSERVE --> REFLECT{"🐔💭 Reflect"}:::wizard
-
-    REFLECT -->|"🐔🔄 Adjust"| PLAN
-    REFLECT -->|"🐔▶️ Continue"| ACT
-    REFLECT -->|"🐔✅ Done"| DONE["💁‍♀️📤 Result"]:::user
-```
-
-### Agent Loop
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
-stateDiagram-v2
-    [*] --> Planning: 🙋‍♀️📥 Receive goal
-    Planning --> Executing: 🐔📋 Create plan
-    Executing --> Observing: 🐔⚡ Take action
-    Observing --> Reflecting: 🐔👀 Get feedback
-    Reflecting --> Planning: 🐔🔄 Adjust
-    Reflecting --> Executing: 🐔▶️ Continue
-    Reflecting --> [*]: 💁‍♀️📤 Goal achieved
-```
-
-### Characteristics
-
-| Characteristic | Description |
-|----------------|-------------|
-| **Goal-directed** | Works toward specified objective |
-| **Adaptive** | Adjusts based on feedback |
-| **Self-directed** | Decides next actions independently |
-| **Persistent** | Continues until goal achieved or failure |
-
-### Example: Bug Investigation
-
-```
-Goal: "Fix the login timeout bug"
-
-Agent:
-1. PLAN: Need to find where timeout is set
-2. ACT: Search codebase for "timeout" in auth
-3. OBSERVE: Found 3 locations
-4. REFLECT: Most likely in session config
-5. ACT: Read session config file
-6. OBSERVE: Default timeout is 30 minutes
-7. REFLECT: User reported issue after 5 minutes
-8. ACT: Check if there's an override
-9. ...continues until resolved...
-```
-
-### Risk Management
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
-flowchart LR
-    classDef user fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#ffffff
-    classDef main fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
-    classDef state fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff
-    classDef error fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#ffffff
-
-    subgraph Guardrails["🛡️ Guardrails"]
-        LIMIT["⏱️ Iteration Limit"]:::error
-        APPROVAL["🙆‍♀️✅ Human Approval"]:::user
-        SCOPE["🔒 Action Scope"]:::error
-        ROLLBACK["↩️ Rollback Capability"]:::error
-    end
-
-    AGENT["🐔 Main Agent (autonomous)"]:::main --> Guardrails
-    Guardrails --> SAFE["✅ Safe Execution"]:::state
-
-    style Guardrails fill:#fef2f2,stroke:#ef4444,stroke-width:2px
-```
-
-### Variant: 🖥️ Multi-Window Context
-
-Implement checkpointing to save 💾 state and resume from interruptions in long-running workflows.
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
-flowchart TB
-    classDef checkpoint fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#ffffff
-    classDef state fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff
-    classDef parallel fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#ffffff
-
-    subgraph Session1["Session 1"]
-        S1P1["🏗️ Phase 1"] --> S1CP["🖥️ Checkpoint"]:::checkpoint
-        S1CP --> S1P2["🔗 Phase 2"]
-        S1P2 --> INTERRUPT["❌ Interrupt"]
-    end
-
-    subgraph Session2["Session 2 (Resume)"]
-        RESUME["🔄 Resume"] --> S2P2["Continue Phase 2"]
-        S2P2 --> S2P3["📝 Phase 3"]
-        S2P3 --> DONE["✅ Complete"]
-    end
-
-    S1CP -.->|💾 State saved| STATE[("💾 State Store")]:::state
-    STATE -.->|💾 State loaded| RESUME
-
-    style Session1 fill:#fef2f2,stroke:#ef4444,stroke-width:2px
-    style Session2 fill:#ecfdf5,stroke:#10b981,stroke-width:2px
-```
-
-**Use 🖥️ Multi-Window for:**
-- Large-scale generation (1000+ files)
-- Long research tasks
-- Multi-day workflows
-- Error recovery
-
-### When to Use
-
-- Open-ended exploration tasks
-- Environment feedback is rich
-- Human oversight is available
-
-### When NOT to Use
-
-- Predictable tasks with known steps
-- No rollback capability
-- Tight time constraints
+| Variant | Parent | Emoji | Description |
+|---------|--------|-------|-------------|
+| **Wizard Workflow** | ⛓️ Prompt Chaining | 🧙 | Human checkpoints via AskUserQuestion |
+| **Parallel Tool Calling** | 🛤️ Parallelization | 🚂 | Multiple tools in single response |
+| **Master-Clone** | 🛤️ Parallelization | 🧬 | Same agent, parallel instances |
 
 ---
 
-## Mechanisms
+## Implementation Mechanisms
 
-These are **implementation mechanisms** in Claude Code, not agentic patterns themselves.
+These are **implementation mechanisms** in Claude Code, not workflows themselves.
 
 ### 📚 Progressive Skills
 
@@ -807,27 +777,7 @@ flowchart TB
     DIRECT --> EXEC
 ```
 
-**Purpose:** Route execution through specialized methodologies.
-
-**📚 Skill Definition:**
-```markdown
-# .claude/skills/test-driven-development/SKILL.md
-
----
-description: Use when implementing features - write tests first
----
-
-# 📚 Test-Driven Development
-
-## When to Use
-- New feature implementation
-- Bug fixes (write test that catches bug first)
-
-## Methodology
-1. 🏗️ RED: Write failing test
-2. 🔗 GREEN: Minimal code to pass
-3. 📝 REFACTOR: Clean while green
-```
+**Purpose:** Route execution through specialized methodologies (implements 🚦 Routing pattern).
 
 ### 🎛️ Programmatic Orchestration
 
@@ -872,107 +822,19 @@ for locale in locales:
 
 ---
 
-## Pattern Comparisons
-
-### 🚦 Routing vs 🛤️ Parallelization
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
-flowchart LR
-    classDef user fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#ffffff
-    classDef main fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
-    classDef subagent fill:#ec4899,stroke:#db2777,stroke-width:2px,color:#ffffff
-    classDef parallel fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#ffffff
-    classDef idle fill:#94a3b8,stroke:#64748b,stroke-width:2px,color:#ffffff
-
-    subgraph ROUTING["🚦 Routing: Choose ONE"]
-        R_IN["🙋‍♀️📥"]:::user --> R_DECIDE{"🐔🚦"}:::main
-        R_DECIDE -.-> R_A["🐦💤 A"]:::idle
-        R_DECIDE --> R_B["🐦⚡ B"]:::subagent
-        R_DECIDE -.-> R_C["🐦💤 C"]:::idle
-        R_B --> R_OUT["💁‍♀️📤"]:::user
-    end
-
-    subgraph PARALLEL["🛤️ Parallelization: Run ALL"]
-        P_IN["🙋‍♀️📥"]:::user --> P_SPLIT["🐔🔀"]:::main
-        P_SPLIT --> P_A["🐦⚡ A"]:::parallel
-        P_SPLIT --> P_B["🐦⚡ B"]:::parallel
-        P_SPLIT --> P_C["🐦⚡ C"]:::parallel
-        P_A --> P_MERGE["🐔🌀"]:::main
-        P_B --> P_MERGE
-        P_C --> P_MERGE
-        P_MERGE --> P_OUT["💁‍♀️📤"]:::user
-    end
-
-    style ROUTING fill:#fef2f2,stroke:#ef4444,stroke-width:2px
-    style PARALLEL fill:#eff6ff,stroke:#3b82f6,stroke-width:2px
-```
-
-| Aspect | 🚦 Routing | 🛤️ Parallelization |
-|--------|-----------|-------------------|
-| **Action** | Choose **ONE** branch | Execute **ALL** branches |
-| **Logic** | `if/else`, `switch/case` | `fork/join`, `Promise.all` |
-| **Question** | "Where should I send this?" | "How can I do all this at once?" |
-| **Result** | Single output from chosen handler | Multiple outputs merged |
-
-### 🛤️ Parallelization vs 🦑 Subagent Orchestration
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
-flowchart LR
-    classDef user fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#ffffff
-    classDef main fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
-    classDef subagent fill:#ec4899,stroke:#db2777,stroke-width:2px,color:#ffffff
-    classDef parallel fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#ffffff
-
-    subgraph PARALLEL["🛤️ Parallelization: SAME Task"]
-        P_IN["🙋‍♀️📥"]:::user --> P_SPLIT["🐔🔀"]:::main
-        P_SPLIT --> P_A["🐦⚡ Chunk 1"]:::parallel
-        P_SPLIT --> P_B["🐦⚡ Chunk 2"]:::parallel
-        P_SPLIT --> P_C["🐦⚡ Chunk 3"]:::parallel
-        P_A --> P_MERGE["🐔🌀"]:::main
-        P_B --> P_MERGE
-        P_C --> P_MERGE
-        P_MERGE --> P_OUT["💁‍♀️📤"]:::user
-    end
-
-    subgraph ORCH["🦑 Orchestration: DIFFERENT Tasks"]
-        O_IN["🙋‍♀️📥"]:::user --> O_MAIN["🐔🪺"]:::main
-        O_MAIN --> O_A["🐦🔒 Security"]:::subagent
-        O_MAIN --> O_B["🐦⚡ Perf"]:::subagent
-        O_MAIN --> O_C["🐦🎨 Style"]:::subagent
-        O_A --> O_SYNTH["🐔🌀"]:::main
-        O_B --> O_SYNTH
-        O_C --> O_SYNTH
-        O_SYNTH --> O_OUT["💁‍♀️📤"]:::user
-    end
-
-    style PARALLEL fill:#eff6ff,stroke:#3b82f6,stroke-width:2px
-    style ORCH fill:#fdf4ff,stroke:#ec4899,stroke-width:2px
-```
-
-| Aspect | 🛤️ Parallelization | 🦑 Subagent Orchestration |
-|--------|-------------------|------------------------|
-| **Workers** | **Interchangeable** (same skill) | **Specialized** (different skills) |
-| **Task type** | **Identical** task on different data | **Different** tasks on same data |
-| **Decision** | **Static** (predefined split) | **Dynamic** (orchestrator decides) |
-| **Example** | 3 cooks make same recipe | Chef + Pastry + Sommelier |
-
----
-
-## Pattern Summary
+## Workflow Summary
 
 ```
 ┌──────────────────────────┬─────────────┬─────────────┬──────────────┬───────────┐
 │ Pattern                  │ Complexity  │ Parallelism │ Human-Loop   │ Iteration │
 ├──────────────────────────┼─────────────┼─────────────┼──────────────┼───────────┤
-│ 🏎️ Direct Execution      │ None        │ None        │ None         │ None      │
-│ ⛓️ Prompt Chaining        │ Low         │ None        │ Optional     │ Linear    │
-│ 🚦 Routing                │ Low         │ None        │ None         │ None      │
-│ 🛤️ Parallelization        │ Medium      │ High        │ Optional     │ None      │
-│ 🦑 Subagent Orchestration │ High        │ High        │ Optional     │ As needed │
-│ 🩻 Evaluator-Optimizer    │ Medium      │ Optional    │ Optional     │ Loop      │
-│ 🐉 Autonomous Agent       │ Very High   │ Variable    │ Recommended  │ Adaptive  │
+│ 0. 🏎️ Baseline           │ None        │ None        │ None         │ None      │
+├──────────────────────────┼─────────────┼─────────────┼──────────────┼───────────┤
+│ 1. ⛓️ Prompt Chaining     │ Low         │ None        │ Optional     │ Linear    │
+│ 2. 🚦 Routing             │ Low         │ None        │ None         │ None      │
+│ 3. 🛤️ Parallelization     │ Medium      │ High        │ Optional     │ None      │
+│ 4. 🦑 Orchestrator-Workers│ High        │ High        │ Optional     │ As needed │
+│ 5. 🩻 Evaluator-Optimizer │ Medium      │ Optional    │ Optional     │ Loop      │
 └──────────────────────────┴─────────────┴─────────────┴──────────────┴───────────┘
 ```
 
@@ -982,15 +844,11 @@ flowchart LR
 
 ### Permission Modes
 
-Control how 🐦 Subagents request permissions for tool usage.
-
 | Mode | Behavior | Use Case |
 |------|----------|----------|
 | `default` | Asks permission for each tool call | Read-only operations, validation |
 | `acceptEdits` | Auto-approves Write/Edit operations | Generation after 🧙 user confirmation |
 | `bypassPermissions` | All tools auto-approved | Trusted autonomous workflows |
-
-**Best Practice:** Use 🧙 Wizard confirmation before spawning subagents with elevated permissions.
 
 ### Parallelization Limits
 
@@ -1000,81 +858,12 @@ Control how 🐦 Subagents request permissions for tool usage.
 | 🔌 MCP calls per subagent | **5** | Rate limit errors |
 | 🪺 Task calls per message | **10** | API limits, timeouts |
 
-**Batching Strategy:**
-```
-# Instead of 39 parallel subagents:
-Wave 1: 10 🐦 subagents
-Wave 2: 10 🐦 subagents
-Wave 3: 10 🐦 subagents
-Wave 4:  9 🐦 subagents
-```
-
-### Context Management
-
-Use `/compact` between major phases to prevent overflow:
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
-flowchart LR
-    classDef wave fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#ffffff
-    classDef compact fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
-    classDef checkpoint fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff
-
-    W1["🚂 Wave 1"]:::wave
-    CP1["🖥️ Checkpoint"]:::checkpoint
-    C1["/compact"]:::compact
-
-    W2["🚂 Wave 2"]:::wave
-    CP2["🖥️ Checkpoint"]:::checkpoint
-    C2["/compact"]:::compact
-
-    W3["🚂 Wave 3"]:::wave
-    DONE["✅ Complete"]:::checkpoint
-
-    W1 --> CP1 --> C1 --> W2 --> CP2 --> C2 --> W3 --> DONE
-```
-
-**Pattern:** Checkpoint → Compact → Resume
-
----
-
-## Combining Patterns
-
-These patterns are building blocks that combine:
-
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#64748b'}}}%%
-flowchart TB
-    classDef user fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#ffffff
-    classDef wizard fill:#14b8a6,stroke:#0d9488,stroke-width:2px,color:#ffffff
-    classDef main fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
-    classDef parallel fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#ffffff
-
-    subgraph Combined["🔗 Complex System"]
-        R["🐔🚦 Routing"]:::wizard --> OW["🐔🎭 Orchestrator"]:::main
-        OW -->|"🐔🪺"| P["🐦⚡ Parallel Workers"]:::parallel
-        P -->|"🐦📤"| EO["🐔🩻 Evaluator"]:::wizard
-    end
-
-    INPUT["🙋‍♀️📥 Input"]:::user --> R
-    EO -->|"🐔📤"| OUTPUT["💁‍♀️📤 Output"]:::user
-
-    style Combined fill:#f8fafc,stroke:#e2e8f0,stroke-width:2px
-```
-
-### Example: Code Review Pipeline
-
-1. **🚦 Routing**: Classify code change type
-2. **🦑 Subagent Orchestration**: Assign to security, perf, style workers
-3. **🛤️ Parallelization**: Workers run concurrently
-4. **🩻 Evaluator-Optimizer**: Iterate on feedback if issues found
-
 ---
 
 <div align="center">
 
 **━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━**
 
-[← 02 Architecture](02-LAYER-ARCHITECTURE.md) • [🏠 Home](README.md) • [04 Use Cases →](04-USE-CASES.md)
+[← 02 Architecture](02-LAYER-ARCHITECTURE.md) • [🏠 Home](README.md) • [04 Agents →](04-AGENTS.md)
 
 </div>

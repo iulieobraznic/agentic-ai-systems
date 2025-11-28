@@ -10,9 +10,9 @@
 
 ---
 
-# Claude Code Agentic Patterns - Documentation
+# Claude Code Agentic Systems - Documentation
 
-> Complete reference for understanding and implementing agentic patterns with Claude Code CLI
+> Complete reference for understanding and implementing agentic workflows & agents with Claude Code CLI
 
 ## 📑 Table of Contents
 
@@ -20,7 +20,7 @@
 |---|---------|-------------|
 | 1 | [Quick Navigation](#quick-navigation) | Links to all documents |
 | 2 | [Emoji Quick Reference](#emoji-quick-reference) | Visual legend |
-| 3 | [Two Pattern Classifications](#two-pattern-classifications) | Research vs Implementation |
+| 3 | [Anthropic Taxonomy](#anthropic-taxonomy) | 🧱 Building Block + Workflows + Agents |
 | 4 | [At a Glance](#at-a-glance-key-concepts) | Components & Layers |
 | 5 | [How to Read](#how-to-read-this-documentation) | Reading paths |
 | 6 | [Cross-Platform](#cross-platform-compatibility) | Compatibility matrix |
@@ -33,11 +33,11 @@
 |----------|---------|
 | [01-TERMINOLOGY](01-OFFICIAL-TERMINOLOGY.md) | Claude Code components (Subagent, Command, Skill, Hook) |
 | [02-ARCHITECTURE](02-LAYER-ARCHITECTURE.md) | 5-Layer system architecture |
-| [03-AGENTIC-PATTERNS](03-AGENTIC-PATTERNS.md) | 7 unified patterns + 2 mechanisms |
-| [04-USE-CASES](04-USE-CASES.md) | **Real-world validated use cases** |
-| [05-PATTERN-SELECTION](05-PATTERN-SELECTION-GUIDE.md) | Decision tree for choosing patterns |
-| [06-MAPPING-GLOSSARY](06-MAPPING-GLOSSARY.md) | Cross-reference and definitions |
-| [07-STYLE-GUIDE](07-STYLE-GUIDE.md) | Colors, emojis, Mermaid standards |
+| [03-WORKFLOWS](03-WORKFLOWS.md) | Baseline + 5 Workflows + variants + mechanisms |
+| [04-AGENTS](04-AGENTS.md) | Autonomous Agents + Multi-Window Context |
+| [05-USE-CASES](05-USE-CASES.md) | **Real-world validated use cases** |
+| [06-SELECTION-GUIDE](06-SELECTION-GUIDE.md) | Decision tree for choosing systems |
+| [07-GLOSSARY](07-MAPPING-GLOSSARY.md) | Cross-reference and definitions |
 
 ---
 
@@ -83,29 +83,60 @@
 
 ---
 
-## Agentic Patterns Overview
+## Anthropic Taxonomy
+
+> Source: [Building Effective Agents](https://www.anthropic.com/engineering/building-effective-agents) (Dec 2024)
+
+### 🧱 Building Block: Augmented LLM
+
+The foundation of ALL agentic systems. Not to be confused with our Components.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                         UNIFIED AGENTIC PATTERNS                            │
+│                    🧱 BUILDING BLOCK = AUGMENTED LLM                         │
+│                       (foundation for ALL patterns)                          │
+├───────────────┬───────────────┬───────────────┬─────────────────────────────┤
+│   Retrieval   │    Tools      │    Memory     │            LLM              │
+│   (RAG/docs)  │   (actions)   │   (context)   │           (core)            │
+└───────────────┴───────────────┴───────────────┴─────────────────────────────┘
+```
+
+> **⚠️ Important Distinction:**
+> - **🧱 Building Block** = Augmented LLM (Anthropic's foundation concept)
+> - **Components** = Claude Code abstractions (🐦 Subagent, 🦴 Slash Command, 📚 Skill, 🪝 Hook)
+> - **Layers** = Our architectural organization (User → Main Agent → Delegation → Execution → State)
+
+### Agentic Systems Hierarchy
+
+> **Agentic Systems** = Umbrella term for any system using LLMs with tools and control flow.
+> Encompasses **Baseline** (simple), **Workflows** (predefined), and **Agents** (dynamic).
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         AGENTIC SYSTEMS (umbrella)                           │
+│─────────────────────────────────────────────────────────────────────────────│
+│                    🧱 BUILDING BLOCK → WORKFLOWS → AGENTS                    │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  PATTERNS (7)                    MECHANISMS (2)                             │
-│  ─────────────                   ──────────────                             │
-│  1. 🏎️ Direct Execution         📚 Progressive Skills                      │
-│  2. ⛓️ Prompt Chaining          🎛️ Programmatic Orchestration              │
-│  3. 🚦 Routing                                                              │
-│  4. 🛤️ Parallelization          VARIANTS (4)                               │
-│  5. 🦑 Subagent Orchestration   ─────────────                               │
-│  6. 🩻 Evaluator-Optimizer      🧙 Wizard Workflow (→ ⛓️)                   │
-│  7. 🐉 Autonomous Agents        🚂 Parallel Tool Calling (→ 🛤️)            │
-│                                  🧬 Master-Clone (→ 🛤️)                     │
-│                                  🖥️ Multi-Window Context (→ 🐉)             │
+│  Anthropic's progression: First the Augmented LLM block, then workflows     │
+│  composed of these blocks, then agents that reuse blocks in loops with      │
+│  real-world feedback.                                                       │
+│                                                                             │
+│  BASELINE (1)                    WORKFLOWS (5)          AGENTS (1)          │
+│  ────────────                    ─────────────          ──────────          │
+│  0. 🏎️ Direct Execution         1. ⛓️ Prompt Chaining  6. 🐉 Autonomous    │
+│     (single augmented LLM)      2. 🚦 Routing                               │
+│                                  3. 🛤️ Parallelization                      │
+│                                  4. 🦑 Orchestrator-Workers                 │
+│                                  5. 🩻 Evaluator-Optimizer                  │
+│                                                                             │
+│  CODE controls the flow ─────────────────────► LLM controls the flow        │
 │                                                                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│                         COMPONENTS (4)                                      │
-│  ─────────────────────────────────────────────────────────────────────────  │
-│   🐦 Subagent  │  🦴 Slash Command  │  📚 Skill  │  🪝 Hook                 │
+│  CLAUDE CODE COMPONENTS (4)               MECHANISMS                        │
+│  ──────────────────────────               ──────────                        │
+│  🐦 Subagent │ 🦴 Slash Command           📚 Progressive Skills (→ 🚦)      │
+│  📚 Skill    │ 🪝 Hook                    🎛️ Programmatic Orchestration     │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -184,18 +215,18 @@ flowchart TB
 
 ## How to Read This Documentation
 
-### If you're new to agentic patterns:
-1. Start with [01-OFFICIAL-TERMINOLOGY](01-OFFICIAL-TERMINOLOGY.md)
-2. Then [02-LAYER-ARCHITECTURE](02-LAYER-ARCHITECTURE.md)
-3. Finally explore patterns as needed
+### If you're new to agentic systems:
+1. Start with [01-TERMINOLOGY](01-OFFICIAL-TERMINOLOGY.md)
+2. Then [02-ARCHITECTURE](02-LAYER-ARCHITECTURE.md)
+3. Finally explore workflows/agents as needed
 
-### If you're choosing a pattern:
-1. Check [04-USE-CASES](04-USE-CASES.md) for real-world examples
-2. Use [05-PATTERN-SELECTION-GUIDE](05-PATTERN-SELECTION-GUIDE.md) for decision trees
+### If you're choosing a workflow:
+1. Check [05-USE-CASES](05-USE-CASES.md) for real-world examples
+2. Use [06-SELECTION-GUIDE](06-SELECTION-GUIDE.md) for decision trees
 
 ### If you're implementing:
-1. Check [03-AGENTIC-PATTERNS](03-AGENTIC-PATTERNS.md) for implementation details
-2. Use [06-MAPPING-GLOSSARY](06-MAPPING-GLOSSARY.md) for term lookups
+1. Check [03-WORKFLOWS](03-WORKFLOWS.md) or [04-AGENTS](04-AGENTS.md) for implementation details
+2. Use [07-GLOSSARY](07-MAPPING-GLOSSARY.md) for term lookups
 
 ---
 
@@ -204,6 +235,12 @@ flowchart TB
 ```mermaid
 mindmap
   root((Agentic System))
+    🧱 Building Block
+      Augmented LLM
+        Retrieval
+        Tools
+        Memory
+        LLM core
     Acteurs
       🙋‍♀️ User
         Sends input 📥
@@ -217,49 +254,41 @@ mindmap
         Executes ⚡
         Returns 📤
         Cannot spawn subagents
-    Components
+    Components 4
       🦴 Slash Command
-        User invokes with /
-        Triggers workflows
       📚 Skill
-        Reusable capability
-        Loaded on demand
       🪝 Hook
-        Event-driven
-        Shell commands
-    Layers
+      🐦 Subagent
+    Layers 5
       🙋‍♀️ User Layer
       🐔 Main Agent Layer
       🔀 Delegation Layer
       ⚡ Execution Layer
       💾 State Layer
-    Patterns 7
+    Baseline 1
       🏎️ Direct Execution
+    Workflows 5
       ⛓️ Prompt Chaining
       🚦 Routing
       🛤️ Parallelization
-      🦑 Subagent Orchestration
+      🦑 Orchestrator-Workers
       🩻 Evaluator-Optimizer
+    Agents 1
       🐉 Autonomous Agents
     Mechanisms 2
       📚 Progressive Skills
       🎛️ Programmatic Orchestration
-    Variants 4
-      🧙 Wizard Workflow
-      🚂 Parallel Tool Calling
-      🧬 Master-Clone
-      🖥️ Multi-Window Context
 ```
 
 ---
 
 ## Cross-Platform Compatibility
 
-These patterns originate from Claude/Anthropic but many apply across AI frameworks:
+These workflows/agents originate from Claude/Anthropic but many apply across AI frameworks:
 
-| Pattern | Claude | GPT Agents | Gemini ADK | LangGraph |
-|:--------|:------:|:----------:|:----------:|:---------:|
-| 🦑 Subagent Orchestration | ✅ | ✅ Handoffs | ✅ Multi-agent | ✅ Subgraphs |
+| System | Claude | GPT Agents | Gemini ADK | LangGraph |
+|:-------|:------:|:----------:|:----------:|:---------:|
+| 🦑 Orchestrator-Workers | ✅ | ✅ Handoffs | ✅ Multi-agent | ✅ Subgraphs |
 | 📚 Progressive Skills | ✅ | ❌ | ❌ | ❌ |
 | 🚂 Parallel Tool Calling | ✅ | ✅ | ✅ ParallelAgent | ✅ Fan-out |
 | 🧬 Master-Clone | ✅ | ✅ Dynamic | ✅ Custom | ✅ Send API |
@@ -269,7 +298,7 @@ These patterns originate from Claude/Anthropic but many apply across AI framewor
 
 **Legend:** ✅ Native | ⚠️ Partial | ❌ Not supported
 
-> **Note**: 📚 Progressive Skills uses Claude Code's unique `.md`-based skill system. Other frameworks have "tools" but not this pattern.
+> **Note**: 📚 Progressive Skills uses Claude Code's unique `.md`-based skill system. Other frameworks have "tools" but not this mechanism.
 
 ---
 

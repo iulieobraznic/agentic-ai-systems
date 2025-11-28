@@ -4,7 +4,7 @@
 
 ━━━━━━━━●━━━━━━━━━━━━━━━━━━━━━━ `2/8`
 
-[← 01 Terminology](01-OFFICIAL-TERMINOLOGY.md) • [03 Agentic Patterns →](03-AGENTIC-PATTERNS.md)
+[← 01 Terminology](01-OFFICIAL-TERMINOLOGY.md) • [03 Workflows →](03-WORKFLOWS.md)
 
 </div>
 
@@ -463,6 +463,6 @@ flowchart TB
 
 **━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━**
 
-[← 01 Terminology](01-OFFICIAL-TERMINOLOGY.md) • [🏠 Home](README.md) • [03 Agentic Patterns →](03-AGENTIC-PATTERNS.md)
+[← 01 Terminology](01-OFFICIAL-TERMINOLOGY.md) • [🏠 Home](README.md) • [03 Workflows →](03-WORKFLOWS.md)
 
 </div>

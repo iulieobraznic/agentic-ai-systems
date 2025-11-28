@@ -1,10 +1,10 @@
 <div align="center">
 
-[🏠 Home](README.md) • [📖 Overview](00-OVERVIEW.md) • **04 Use Cases**
+[🏠 Home](README.md) • [📖 Overview](00-OVERVIEW.md) • **05 Use Cases**
 
-━━━━━━━━━━●━━━━━━━━━━━━━━━━━━━━ `4/8`
+━━━━━━━━━━●━━━━━━━━━━━━━━━━━━━━ `5/8`
 
-[← 03 Agentic Patterns](03-AGENTIC-PATTERNS.md) • [05 Selection Guide →](05-PATTERN-SELECTION-GUIDE.md)
+[← 04 Agents](04-AGENTS.md) • [06 Selection Guide →](06-SELECTION-GUIDE.md)
 
 </div>
 
@@ -31,7 +31,7 @@
 
 | Use Case | Pattern | Components |
 |----------|---------|------------|
-| Multi-Agent Research | 🦑 Subagent Orchestration | Lead Agent → Parallel Subagents → Synthesis |
+| Multi-Agent Research | 🦑 Orchestrator-Workers | Lead Agent → Parallel Subagents → Synthesis |
 | Code Review Pipeline | 🚂 Parallel + 🦑 Subagent | Security, Performance, Style reviewers |
 | Multi-Locale Generation | 🧬 Master-Clone + 🧙 Wizard | Primary → Variants in isolation |
 | Personal Assistant | 📚 Progressive Skills | Calendar, Email, Tasks routing |
@@ -60,7 +60,7 @@ flowchart TB
     classDef tool fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#ffffff
     classDef state fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff
 
-    USER["🙋‍♀️ Research Query"] --> LEAD["🐔 Lead Agent"]:::main
+    USER["🙋‍♀️📥 Research Query"] --> LEAD["🐔 Lead Agent"]:::main
 
     LEAD -->|"🪺 Task"| PLAN["Plan research strategy"]
     PLAN --> SPAWN["Spawn specialized researchers"]
@@ -86,7 +86,7 @@ flowchart TB
 
 | Pattern | Role |
 |---------|------|
-| 🦑 Subagent Orchestration | Lead Agent spawns specialized researchers |
+| 🦑 Orchestrator-Workers | Lead Agent spawns specialized researchers |
 | 🚂 Parallel Tool Calling | Multiple researchers work simultaneously |
 | 🧬 Master-Clone | Each researcher has isolated context |
 
@@ -137,7 +137,7 @@ flowchart TB
     classDef parallel fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#ffffff
     classDef state fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff
 
-    PR["🙋‍♀️ PR Submitted"] --> ORCH["🐔 Review Orchestrator"]:::main
+    PR["🙋‍♀️📥 PR Submitted"] --> ORCH["🐔 Review Orchestrator"]:::main
 
     ORCH -->|"Analyze scope"| SIZE{PR Size?}
 
@@ -166,7 +166,7 @@ flowchart TB
 |---------|---------|-----------|
 | 1-3 files | 🏎️ Direct Execution | No overhead needed |
 | 4-10 files | 🚂 Parallel Tool Calling | Read all files concurrently |
-| 10+ files | 🦑 Subagent Orchestration | Specialized reviewers |
+| 10+ files | 🦑 Orchestrator-Workers | Specialized reviewers |
 
 ### Subagent Definitions
 
@@ -245,7 +245,7 @@ flowchart TB
 | Stage | Pattern | Purpose |
 |-------|---------|---------|
 | Entry | 🧙 Wizard Workflows | Confirm scope before generation |
-| Primary | 🦑 Subagent Orchestration | Generate reference locale |
+| Primary | 🦑 Orchestrator-Workers | Generate reference locale |
 | Variants | 🧬 Master-Clone | Parallel, isolated generation |
 | Throughout | 🖥️ Multi-Window Context | Resume on interruption |
 
@@ -279,7 +279,7 @@ flowchart TB
     classDef skill fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
     classDef tool fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#ffffff
 
-    USER["🙋‍♀️ User Request"] --> ROUTER["🐔 Main Agent"]:::main
+    USER["🙋‍♀️📥 User Request"] --> ROUTER["🐔 Main Agent"]:::main
 
     ROUTER --> CLASSIFY{"🚦 Classify Intent"}
 
@@ -340,7 +340,7 @@ flowchart TB
     classDef wizard fill:#14b8a6,stroke:#0d9488,stroke-width:2px,color:#ffffff
     classDef state fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff
 
-    TICKET["🙋‍♀️ Customer Ticket"] --> TRIAGE["🐔 Triage Agent"]:::main
+    TICKET["🙋‍♀️📥 Customer Ticket"] --> TRIAGE["🐔 Triage Agent"]:::main
 
     TRIAGE --> CLASSIFY{"🚦 Issue Type?"}
 
@@ -362,7 +362,7 @@ flowchart TB
 | Pattern | Role |
 |---------|------|
 | 🚦 Routing | Classify ticket type |
-| 🦑 Subagent Orchestration | Specialized handlers |
+| 🦑 Orchestrator-Workers | Specialized handlers |
 | 🧙 Wizard Workflows | Human escalation path |
 
 ### Escalation Criteria
@@ -398,7 +398,7 @@ flowchart TB
     classDef state fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff
     classDef error fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#ffffff
 
-    START["🙋‍♀️ /migrate source target"] --> WIZARD["🧙 Wizard: Confirm"]:::wizard
+    START["🙋‍♀️📥 /migrate source target"] --> WIZARD["🧙 Wizard: Confirm"]:::wizard
 
     WIZARD -->|"❓ Approved"| P1["🏗️ Phase 1: Analyze"]
     P1 --> C1["🖥️ Checkpoint"]:::checkpoint
@@ -445,7 +445,7 @@ Quick decision matrix:
 | If your use case involves... | Use Pattern |
 |------------------------------|-------------|
 | Multiple independent searches | 🚂 Parallel Tool Calling |
-| Specialized domain knowledge | 🦑 Subagent Orchestration |
+| Specialized domain knowledge | 🦑 Orchestrator-Workers |
 | Same task on different data | 🧬 Master-Clone |
 | Critical/destructive operations | 🧙 Wizard Workflows |
 | Long-running workflows (>10 min) | 🖥️ Multi-Window Context |
@@ -463,7 +463,7 @@ Quick decision matrix:
 | Category | Examples | Pattern |
 |----------|----------|---------|
 | **Core Development** | Code Writer, Refactorer, Debugger | 🏎️ Direct / 🦑 Subagent |
-| **Quality Assurance** | Test Writer, Security Reviewer, Linter | 🦑 Subagent Orchestration |
+| **Quality Assurance** | Test Writer, Security Reviewer, Linter | 🦑 Orchestrator-Workers |
 | **Data & AI** | Data Analyst, ML Pipeline, Embeddings | 🚂 Parallel + 🧬 Clone |
 | **DevOps** | CI/CD Manager, Docker Builder, K8s | 🎛️ Programmatic |
 | **Business** | Doc Writer, Translator, Report Generator | 🧬 Master-Clone |
@@ -492,7 +492,7 @@ tools: Read, Write, Grep, Glob, Bash
 
 **━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━**
 
-[← 03 Agentic Patterns](03-AGENTIC-PATTERNS.md) • [🏠 Home](README.md) • [05 Selection Guide →](05-PATTERN-SELECTION-GUIDE.md)
+[← 04 Agents](04-AGENTS.md) • [🏠 Home](README.md) • [06 Selection Guide →](06-SELECTION-GUIDE.md)
 
 </div>
 
