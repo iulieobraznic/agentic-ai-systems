@@ -1,12 +1,12 @@
 <div align="center">
 
-[🏠 Home](../README.md) › **Foundations**
+# Foundations
+
+[🏠 Home](../README.md) • **🧱 Foundations** • [⚙️ Workflows](../workflows/) • [🐉 Agents](../agents/) • [🛠️ Implementation](../implementation/) • [🗺️ Guides](../guides/)
 
 </div>
 
 ---
-
-# 🧱 Foundations
 
 > **TL;DR:** Core concepts that underpin all agentic systems.
 
@@ -22,6 +22,6 @@
 
 <div align="center">
 
-[🏠 Home](../README.md) • [Workflows →](../workflows/)
+[🏠 Home](../README.md) • **🧱 Foundations** • [⚙️ Workflows](../workflows/) • [🐉 Agents](../agents/) • [🛠️ Implementation](../implementation/) • [🗺️ Guides](../guides/)
 
 </div>

@@ -4,21 +4,11 @@
 
 **Workflows and agents for building agentic AI systems | Explained simply**
 
-<br/>
+[![Claude Code CLI](https://img.shields.io/badge/Claude_Code-CLI-8b5cf6?style=flat-square)](https://docs.anthropic.com/en/docs/claude-code)
+[![Based on Anthropic Research](https://img.shields.io/badge/Based_on-Anthropic_Research-ec4899?style=flat-square)](https://www.anthropic.com/research/building-effective-agents)
+[![Awesome Claude Code](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/hesreallyhim/awesome-claude-code)
 
-<a href="https://docs.anthropic.com/en/docs/claude-code">
-  <img src="https://img.shields.io/badge/Claude_Code-CLI-8b5cf6?style=flat-square&logo=anthropic" alt="Claude Code CLI"/>
-</a>
-<a href="https://www.anthropic.com/research/building-effective-agents">
-  <img src="https://img.shields.io/badge/Based_on-Anthropic_Research-ec4899?style=flat-square" alt="Anthropic Research"/>
-</a>
-<a href="https://github.com/hesreallyhim/awesome-claude-code">
-  <img src="https://awesome.re/mentioned-badge-flat.svg" alt="Awesome Claude Code"/>
-</a>
-
-<br/><br/>
-
-[Foundations](foundations/) • [Workflows](workflows/) • [Agents](agents/) • [Implementation](implementation/) • [Guides](guides/)
+[🧱 Foundations](foundations/) • [⚙️ Workflows](workflows/) • [🐉 Agents](agents/) • [🛠️ Implementation](implementation/) • [🗺️ Guides](guides/)
 
 </div>
 

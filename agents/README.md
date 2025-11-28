@@ -1,12 +1,12 @@
 <div align="center">
 
-[🏠 Home](../README.md) › **Agents**
+# Agents
+
+[🏠 Home](../README.md) • [🧱 Foundations](../foundations/) • [⚙️ Workflows](../workflows/) • **🐉 Agents** • [🛠️ Implementation](../implementation/) • [🗺️ Guides](../guides/)
 
 </div>
 
 ---
-
-# Agents
 
 > **TL;DR:** Dynamic systems where LLMs control their own processes. Maximum autonomy, maximum flexibility.
 
@@ -66,6 +66,6 @@ Agents can be used for **open-ended problems** where:
 
 <div align="center">
 
-[🏠 Home](../README.md) • [Workflows](../workflows/) • [Foundations](../foundations/)
+[🏠 Home](../README.md) • [🧱 Foundations](../foundations/) • [⚙️ Workflows](../workflows/) • **🐉 Agents** • [🛠️ Implementation](../implementation/) • [🗺️ Guides](../guides/)
 
 </div>

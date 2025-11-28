@@ -1,12 +1,12 @@
 <div align="center">
 
-[🏠 Home](../README.md) › **Workflows**
+# Workflows
+
+[🏠 Home](../README.md) • [🧱 Foundations](../foundations/) • **⚙️ Workflows** • [🐉 Agents](../agents/) • [🛠️ Implementation](../implementation/) • [🗺️ Guides](../guides/)
 
 </div>
 
 ---
-
-# Workflows
 
 > **TL;DR:** Predefined orchestration paths where code controls the flow. From simple baseline to complex multi-step processes.
 
@@ -74,6 +74,6 @@ Quality iteration needed      → 🩻 Evaluator-Optimizer
 
 <div align="center">
 
-[🏠 Home](../README.md) • [Foundations](../foundations/) • [Agents →](../agents/)
+[🏠 Home](../README.md) • [🧱 Foundations](../foundations/) • **⚙️ Workflows** • [🐉 Agents](../agents/) • [🛠️ Implementation](../implementation/) • [🗺️ Guides](../guides/)
 
 </div>
