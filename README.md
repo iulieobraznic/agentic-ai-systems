@@ -26,38 +26,25 @@ Because complex systems deserve simple explanations.</sub>
 ## Overview
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'lineColor': '#a78bfa'}}}%%
-flowchart TB
-    classDef root fill:#8b5cf6,stroke:#7c3aed,stroke-width:3px,color:#ffffff
-    classDef foundations fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#ffffff
-    classDef workflows fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff
-    classDef agents fill:#ec4899,stroke:#db2777,stroke-width:2px,color:#ffffff
-    classDef implementation fill:#6366f1,stroke:#4f46e5,stroke-width:2px,color:#ffffff
-    classDef leaf fill:#1e293b,stroke:#475569,stroke-width:1px,color:#f8fafc
-
-    ROOT((🐔 Agentic<br/>Systems)):::root
-
-    ROOT --> F[🧱 Foundations]:::foundations
-    ROOT --> W[⚙️ Workflows]:::workflows
-    ROOT --> A[🐉 Agents]:::agents
-    ROOT --> I[🛠️ Implementation]:::implementation
-
-    F --> F1[Augmented LLM]:::leaf
-
-    W --> W1[🏎️ Baseline]:::leaf
-    W --> W2[⛓️ Prompt Chaining]:::leaf
-    W --> W3[🚦 Routing]:::leaf
-    W --> W4[🛤️ Parallelization]:::leaf
-    W --> W5[🦑 Orchestrator]:::leaf
-    W --> W6[🩻 Evaluator]:::leaf
-
-    A --> A1[Autonomous]:::leaf
-    A --> A2[Multi-Window]:::leaf
-
-    I --> I1[🐦 Subagent]:::leaf
-    I --> I2[🦴 Command]:::leaf
-    I --> I3[📚 Skill]:::leaf
-    I --> I4[🪝 Hook]:::leaf
+mindmap
+  root((🐔 Agentic Systems))
+    🧱 Foundations
+      Augmented LLM
+    ⚙️ Workflows
+      🏎️ Baseline
+      ⛓️ Chaining
+      🚦 Routing
+      🛤️ Parallel
+      🦑 Orchestrator
+      🩻 Evaluator
+    🐉 Agents
+      Autonomous
+      Multi-Window
+    🛠️ Implementation
+      🐦 Subagent
+      🦴 Command
+      📚 Skill
+      🪝 Hook
 ```
 
 ---
