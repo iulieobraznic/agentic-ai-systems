@@ -1,15 +1,18 @@
 <div align="center">
 
-# Agentic AI Systems
+# Agentic AI Systems 🐔
 
-**Workflows and agents for building agentic AI systems | Explained simply**
+**Agentic patterns explained with chickens — because AI orchestration doesn't have to be scary**
+
+*Main Agent spawns Subagents like a hen with her chicks 🐔🪺🐦*
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-CLI-8b5cf6?style=flat-square&logo=anthropic&logoColor=white)](https://docs.anthropic.com/en/docs/claude-code)
 [![Anthropic Research](https://img.shields.io/badge/Anthropic-Research-ec4899?style=flat-square&logo=anthropic&logoColor=white)](https://www.anthropic.com/research/building-effective-agents)
+[![SuperNovae](https://img.shields.io/badge/SuperNovae-Studio-ff6b35?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDkgOUwyIDEyTDkgMTVMMTIgMjJMMTUgMTVMMjIgMTJMMTUgOVoiLz48L3N2Zz4=)](https://github.com/SuperNovae-studio)
 [![Awesome](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/hesreallyhim/awesome-claude-code)
 [![License](https://img.shields.io/badge/License-MIT-10b981?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-06b6d4?style=flat-square)](CONTRIBUTING.md)
-[![Mermaid Diagrams](https://img.shields.io/badge/Mermaid-Diagrams-f59e0b?style=flat-square&logo=mermaid&logoColor=white)](https://mermaid.js.org/)
+[![Mermaid](https://img.shields.io/badge/Mermaid-Diagrams-f59e0b?style=flat-square&logo=mermaid&logoColor=white)](https://mermaid.js.org/)
 
 [🧱 Foundations](foundations/) • [⚙️ Workflows](workflows/) • [🐉 Agents](agents/) • [🛠️ Implementation](implementation/) • [🗺️ Guides](guides/)
 
